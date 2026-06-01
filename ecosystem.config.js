@@ -12,7 +12,7 @@
 module.exports = {
   apps: [
     {
-      name: 'portal-recetas',
+      name: 'docs',
       script: 'node_modules/.bin/docusaurus',
       args: 'serve --port 3020 --host 0.0.0.0',
       cwd: __dirname,
