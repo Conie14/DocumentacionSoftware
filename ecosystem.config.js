@@ -18,14 +18,15 @@ const projectRoot = isProd
   ? 'C:\\ProyectosGE\\DocumentacionSoftware'
   : __dirname;
 
+// En Windows, PM2 no puede ejecutar el script POSIX de node_modules/.bin/
+// directamente; hay que pasar node como intérprete y apuntar al .mjs de Docusaurus.
 module.exports = {
   apps: [
     {
       name: 'docs',
-      script: 'node_modules/.bin/docusaurus',
-      args: 'serve --port 3020 --host 0.0.0.0',
+      script: 'node',
+      args: 'node_modules/@docusaurus/core/bin/docusaurus.mjs serve --port 3020 --host 0.0.0.0',
       cwd: projectRoot,
-      interpreter: 'none',
       env: {
         NODE_ENV: 'production',
       },
@@ -33,13 +34,9 @@ module.exports = {
       autorestart: true,
       max_restarts: 5,
       restart_delay: 3000,
-      // Logs — rutas absolutas para evitar ambigüedad en el servidor
-      error_file: isProd
-        ? 'C:\\ProyectosGE\\HistoricoRecetas\\logs\\docs-error.log'
-        : './logs/pm2-error.log',
-      out_file: isProd
-        ? 'C:\\ProyectosGE\\HistoricoRecetas\\logs\\docs-out.log'
-        : './logs/pm2-out.log',
+      // Logs
+      error_file: './logs/pm2-error.log',
+      out_file:   './logs/pm2-out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss',
     },
   ],
