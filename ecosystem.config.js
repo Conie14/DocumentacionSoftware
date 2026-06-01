@@ -11,15 +11,16 @@
  * Ruta en servidor: C:\ProyectosGE\DocumentacionSoftware
  */
 
-// En Windows, PM2 resuelve `script` como ruta relativa al cwd si no es absoluta.
-// process.execPath devuelve la ruta absoluta al node.exe que usa el propio PM2,
-// garantizando que siempre se use el ejecutable correcto sin importar el cwd.
+// En Windows, PM2 no resuelve 'node' desde el PATH; hay que indicar
+// el intérprete como ruta absoluta via process.execPath (el node.exe
+// que el propio PM2 usa) y el script como ruta relativa al cwd.
 module.exports = {
   apps: [
     {
       name: 'docs',
-      script: process.execPath,   // → p.ej. C:\Program Files\nodejs\node.exe
-      args: 'node_modules/@docusaurus/core/bin/docusaurus.mjs serve --port 3020 --host 0.0.0.0',
+      interpreter: process.execPath,  // → C:\Program Files\nodejs\node.exe  (absoluta)
+      script: 'node_modules/@docusaurus/core/bin/docusaurus.mjs',
+      args: 'serve --port 3020 --host 0.0.0.0',
       cwd: 'C:\\ProyectosGE\\DocumentacionSoftware',
       env: {
         NODE_ENV: 'production',
