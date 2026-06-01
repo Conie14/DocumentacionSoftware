@@ -12,7 +12,8 @@
     "serve": "docusaurus serve --port 3020",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "postinstall": "node scripts/patch-docusaurus.js"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.1",
