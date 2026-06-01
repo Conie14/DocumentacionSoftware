@@ -7,7 +7,7 @@ const config: Config = {
   tagline: 'Documentación del procesador e histórico de recetas',
   favicon: 'img/favicon.ico',
 
-  url: 'http://localhost',
+  url: 'http://localhost:3020',
   baseUrl: '/',
 
   onBrokenLinks: 'throw',
