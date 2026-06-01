@@ -11,22 +11,16 @@
  * Ruta en servidor: C:\ProyectosGE\DocumentacionSoftware
  */
 
-// Detecta si corre en el servidor de producción (Windows + Administrador)
-// o en la máquina de desarrollo; ajusta el cwd en consecuencia.
-const isProd = process.env.COMPUTERNAME === 'WIN-AHGHB3Q61DS';
-const projectRoot = isProd
-  ? 'C:\\ProyectosGE\\DocumentacionSoftware'
-  : __dirname;
-
-// En Windows, PM2 no puede ejecutar el script POSIX de node_modules/.bin/
-// directamente; hay que pasar node como intérprete y apuntar al .mjs de Docusaurus.
+// En Windows, PM2 resuelve `script` como ruta relativa al cwd si no es absoluta.
+// process.execPath devuelve la ruta absoluta al node.exe que usa el propio PM2,
+// garantizando que siempre se use el ejecutable correcto sin importar el cwd.
 module.exports = {
   apps: [
     {
       name: 'docs',
-      script: 'node',
+      script: process.execPath,   // → p.ej. C:\Program Files\nodejs\node.exe
       args: 'node_modules/@docusaurus/core/bin/docusaurus.mjs serve --port 3020 --host 0.0.0.0',
-      cwd: projectRoot,
+      cwd: 'C:\\ProyectosGE\\DocumentacionSoftware',
       env: {
         NODE_ENV: 'production',
       },
@@ -34,9 +28,9 @@ module.exports = {
       autorestart: true,
       max_restarts: 5,
       restart_delay: 3000,
-      // Logs
-      error_file: './logs/pm2-error.log',
-      out_file:   './logs/pm2-out.log',
+      // Logs con rutas absolutas para evitar ambigüedad
+      error_file: 'C:\\ProyectosGE\\DocumentacionSoftware\\logs\\pm2-error.log',
+      out_file:   'C:\\ProyectosGE\\DocumentacionSoftware\\logs\\pm2-out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss',
     },
   ],
