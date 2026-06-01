@@ -11,28 +11,36 @@
  * Ruta en servidor: C:\ProyectosGE\DocumentacionSoftware
  */
 
-// En Windows, PM2 no resuelve 'node' desde el PATH; hay que indicar
-// el intérprete como ruta absoluta via process.execPath (el node.exe
-// que el propio PM2 usa) y el script como ruta relativa al cwd.
+// Mismo patrón que recetario: script JS wrapper + sin interpreter explícito.
+// PM2 en Windows detecta automáticamente Node.js para archivos .js.
 module.exports = {
   apps: [
     {
       name: 'docs',
-      interpreter: process.execPath,  // → C:\Program Files\nodejs\node.exe  (absoluta)
-      script: 'node_modules/@docusaurus/core/bin/docusaurus.mjs',
-      args: 'serve --port 3020 --host 0.0.0.0',
+
+      // Wrapper JS que lanza Docusaurus con process.execPath (evita problemas de PATH en Windows)
+      script: './scripts/start-docs.js',
       cwd: 'C:\\ProyectosGE\\DocumentacionSoftware',
+
       env: {
         NODE_ENV: 'production',
+        PORT: 3020,
       },
-      // Reinicio automático si falla
-      autorestart: true,
-      max_restarts: 5,
-      restart_delay: 3000,
-      // Logs con rutas absolutas para evitar ambigüedad
-      error_file: 'C:\\ProyectosGE\\DocumentacionSoftware\\logs\\pm2-error.log',
-      out_file:   'C:\\ProyectosGE\\DocumentacionSoftware\\logs\\pm2-out.log',
+
+      // Comportamiento ante fallos — igual que recetario
+      autorestart:   true,
+      watch:         false,
+      max_restarts:  10,
+      restart_delay: 5000,
+      min_uptime:    '10s',
+
+      // Logs
+      out_file:        './logs/docs-out.log',
+      error_file:      './logs/docs-error.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss',
+      merge_logs:      true,
+
+      exec_mode: 'fork',
     },
   ],
 };
